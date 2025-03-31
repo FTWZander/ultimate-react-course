@@ -1,3 +1,4 @@
+// Use ctrl+shift+P to open run pane, and Quokka > start on current file
 const data = [
   {
     id: 1,
@@ -143,12 +144,16 @@ function getBook(id) {
   return data.find((d) => d.id === id);
 }
 
-// destructuring
-const book = getBook(2);
-book;
+// fetch("https://jsonplaceholder.typicode.com/todos/")
+//   .then((response) => response.json()) // this also takes time to resolve
+//   .then((json) => console.log(json));
+// console.log("FAST!");
 
-const { title, author, pages, publicationDate, genres, hasMovieAdaptation } =
-  book;
+async function getTodos() {
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos/");
+  const data = await response.json();
+  console.log(data);
+}
 
-const [primaryGenre, secondaryGenre, ...otherGenres] = genres;
-console.log(primaryGenre, secondaryGenre, otherGenres);
+console.log(getTodos()); // This doesnt wait either
+console.log("FAST!");

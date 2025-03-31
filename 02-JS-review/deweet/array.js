@@ -1,3 +1,4 @@
+// Use ctrl+shift+P to open run pane, and Quokka > start on current file
 const data = [
   {
     id: 1,
@@ -143,12 +144,47 @@ function getBook(id) {
   return data.find((d) => d.id === id);
 }
 
-// destructuring
-const book = getBook(2);
-book;
+const books = getBooks();
+books;
 
-const { title, author, pages, publicationDate, genres, hasMovieAdaptation } =
-  book;
+// Use array map to just get titles
+const titles = books.map((book) => book.title);
+titles;
 
-const [primaryGenre, secondaryGenre, ...otherGenres] = genres;
-console.log(primaryGenre, secondaryGenre, otherGenres);
+const essentialData = books.map((book) => ({
+  title: book.title,
+  author: book.author,
+})); // Note how the arrow points to a paren. This returns data.
+
+const longBooksWithMovie = books
+  .filter((book) => book.pages > 500)
+  .filter((book) => book.hasMovieAdaptation);
+longBooksWithMovie;
+
+// Array reduce essentially boils down an array of values to a single value
+// Adding up all the pages of the books is one example
+const pageTotal = books.reduce((acc, book) => acc + book.pages, 0); // acc is the "accumulator", or running total. Starts at 0 (last argument)
+pageTotal;
+
+const arr = [3, 7, 1, 5, 4]; // Warning: .sort mutates original
+const sorted = arr.sort((a, b) => a - b); // do b - a for descending
+sorted;
+
+const sortedByPages = books.slice().sort((a, b) => b.pages - a.pages); // .slice() by itself copies the original to prevent mutation
+sortedByPages;
+
+// Immutable arrays. Don't want to mutate the original books
+const newBook = {
+  id: 6,
+  title: "Hairy Twatter and the Half-Black Chick",
+  author: "Pea Tear Griffin",
+};
+const newBookshelf = [...books, newBook];
+
+const smallerBookshelf = newBookshelf.filter((book) => book.id !== 3);
+smallerBookshelf;
+
+// Update a particular book during loop. Leave others as-is
+const editedBookshelf = smallerBookshelf.map((book) =>
+  book.id === 1 ? { ...book, hasMovieAdaptation: true } : book
+);

@@ -1,3 +1,4 @@
+// Use ctrl+shift+P to open run pane, and Quokka > start on current file
 const data = [
   {
     id: 1,
@@ -144,11 +145,63 @@ function getBook(id) {
 }
 
 // destructuring
-const book = getBook(2);
+const book = getBook(3);
 book;
 
 const { title, author, pages, publicationDate, genres, hasMovieAdaptation } =
   book;
 
-const [primaryGenre, secondaryGenre, ...otherGenres] = genres;
+const [primaryGenre, secondaryGenre, ...otherGenres] = genres; // otherGenres is another array with remaining elements
 console.log(primaryGenre, secondaryGenre, otherGenres);
+
+const newGenres = [...genres, "epic fantasy"];
+newGenres;
+
+const updatedBook = {
+  ...book,
+  moviePublicationDate: "2001-12-19", // new element
+  pages: 1210, // overwrite existing 'page'
+};
+updatedBook;
+
+const summary = `${title} is a book with ${updatedBook.pages} pages.`;
+summary;
+
+const pagesRange = pages > 1000 ? "TOO LONG!" : "Just right";
+pagesRange;
+
+// Old function way
+// function getOldYear(str) {
+//   return str.split("-")[0];
+// }
+
+const getYear = (str) => str.split("-")[0];
+
+console.log(getYear(publicationDate));
+
+console.log(true && "Some String");
+console.log(false && "Some string"); // short circuit if first operand is false
+
+// Truthy and falsy
+// Falsy: 0, '', null, undefined
+console.log("Dick" && "Is Truthy");
+console.log(0 && "Is Truthy");
+
+// OR operattor shorts when first operand is true and returns it
+const spanishTranslated = book.translations.spanish || "NOT TRANSLATED"; // Set a default value
+spanishTranslated;
+
+// const countWrong = book.reviews.librarything.reviewsCount || "No Data";
+// countWrong; // Wrong, count is actually 0, but is falsy, causing the default
+
+// const count = book.reviews.librarything.reviewsCount ?? "No Data";
+// count; // "Knowledge colescing operator". Only null and undef are false
+
+// Chaining
+function getTotalReviewCount(book) {
+  const goodreads = book.reviews.goodreads.reviewsCount;
+  const librarything = book.reviews.librarything?.reviewsCount ?? 0; // stops evaluating and returns undefined
+  return goodreads + librarything;
+}
+
+console.log(getTotalReviewCount(book));
