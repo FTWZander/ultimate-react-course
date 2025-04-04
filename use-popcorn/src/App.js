@@ -73,7 +73,7 @@ function MovieList({movies}) {
   );
 }
 
-function ListBox({children}) {
+function ListBox({element}) {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -84,7 +84,7 @@ function ListBox({children}) {
       >
         {isOpen ? "–" : "+"}
       </button>
-      {isOpen && children}
+      {isOpen && element}
     </div>
   );
 }
@@ -192,13 +192,22 @@ export default function App() {
         <NumResults movies={movies}/>
       </NavBar>
       <MainComponent>
-        <ListBox>
+        <ListBox element={
+          <MovieList movies={movies} />
+        } />
+        <ListBox element={
+          <>
+          <WatchedSummary watched={watched} />
+           <WatchedMovieList watched={watched} />
+           </>
+        } />
+        {/* <ListBox>
           <MovieList movies={movies} />
         </ListBox>
         <ListBox>
           <WatchedSummary watched={watched} />
            <WatchedMovieList watched={watched} />
-        </ListBox>
+        </ListBox> */}
       </MainComponent>
     </>
   );
