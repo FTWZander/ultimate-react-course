@@ -13,20 +13,21 @@ function Logo() {
   );
 }
 
-function NumResults() {
+function NumResults({movies}) {
   return (
     <p className="num-results">
-      Found <strong>X</strong> results
+      Found <strong>{movies.length}</strong> results
     </p>
   );
 }
 
-function NavBar() {
+function NavBar({children}) {
   return (
     <nav className="nav-bar">
       <Logo />
-      <SearchBar />
-      <NumResults />
+      {children}      
+      {/* <SearchBar />
+      <NumResults movies={movies}/> */}
     </nav>
   );
 }
@@ -59,19 +60,20 @@ function SingleMovie({ movie }) {
   );
 }
 
-function MovieList() {
-  const [movies, setMovies] = useState(tempMovieData);
+function MovieList({movies}) {
+  // lifted to App
+  // const [movies, setMovies] = useState(tempMovieData);
 
   return (
     <ul className="list">
       {movies?.map((movie) => (
-        <SingleMovie movie={movie} />
+        <SingleMovie movie={movie}  key={movie.imdbID}/>
       ))}
     </ul>
   );
 }
 
-function ListBox() {
+function ListBox({children}) {
   const [isOpen1, setIsOpen1] = useState(true);
 
   return (
@@ -82,7 +84,7 @@ function ListBox() {
       >
         {isOpen1 ? "–" : "+"}
       </button>
-      {isOpen1 && <MovieList />}
+      {isOpen1 && children}
     </div>
   );
 }
@@ -116,11 +118,9 @@ function WatchedSummary({ watched }) {
   );
 }
 
-function WatchedMovieList({ watched }) {
+function WatchedMovie({movie}) {
   return (
-    <ul className="list">
-      {watched.map((movie) => (
-        <li key={movie.imdbID}>
+    <li key={movie.imdbID}>
           <img src={movie.Poster} alt={`${movie.Title} poster`} />
           <h3>{movie.Title}</h3>
           <div>
@@ -138,6 +138,14 @@ function WatchedMovieList({ watched }) {
             </p>
           </div>
         </li>
+  )
+}
+
+function WatchedMovieList({ watched }) {
+  return (
+    <ul className="list">
+      {watched.map((movie) => (
+        <WatchedMovie movie={movie} key={movie.imdbID} />
       ))}
     </ul>
   );
@@ -165,20 +173,29 @@ function WatchedBox() {
   );
 }
 
-function MainComponent() {
+function MainComponent({children}) {
   return (
     <main className="main">
-      <ListBox />
-      <WatchedBox />
+      {children}
     </main>
   );
 }
 
 export default function App() {
+  const [movies, setMovies] = useState(tempMovieData);
+
   return (
     <>
-      <NavBar />
-      <MainComponent />
+      <NavBar>
+        <SearchBar />
+        <NumResults movies={movies}/>
+      </NavBar>
+      <MainComponent>
+        <ListBox>
+          <MovieList movies={movies} />
+        </ListBox>
+        <WatchedBox />
+      </MainComponent>
     </>
   );
 }
